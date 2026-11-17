@@ -1,53 +1,30 @@
 #include <stdio.h>
-#define MAX 20
+#include "matrix.h"
 
-int czytajDane(FILE *f, double M[][MAX], int *w, int *k) {
-    if(*w<1 || *k<1 || *w>MAX || *k>MAX) {
-        printf("niepoprawne wymiary\n");
-        return 1;
+int liczba_testow = 0;
+int liczba_bledow = 0;
+
+static void sprawdz(int warunek, const char *opis) {
+    liczba_testow++;
+    if (warunek) {
+        printf("[ OK ] %s\n", opis);
+    } else {
+        liczba_bledow++;
+        printf("[BLAD] %s\n", opis);
     }
-    for(int i = 0; i<*w; i++) {
-        for(int j = 0; j<*k; j++){
-            int wynik = fscanf(f, "%lf", &M[i][j]);
-            if(wynik != 1) {
-                printf("blad odczytu danych\n");
-                return 1;
-            }
-        }
-    }
-    return 0;
 }
 
-int wczytajMacierz(const char *nazwa, double M[][MAX], int *w, int *k) {
-    FILE *f = fopen(nazwa, "r");
-    if(f == NULL) {
-        printf("blad otwarcia pliku");
-        return 1;
-    }
-    int kod = czytajDane(f, M, w, k);
-    fclose(f);
-    return kod;
-}
+int main() {
+    double A[MAX][MAX] = {{1, 2}, {3, 4}};
+    double B[MAX][MAX] = {{5, 6}, {7, 8}};
+    double C[MAX][MAX];
+    int wC, kC;
 
-int zapiszMacierz(const char *nazwa, double M[][MAX], int w, int k) {
-    FILE *f = fopen(nazwa, "w");
-    if(f == NULL) {
-        printf("blad otwarcia pliku");
-        return 1;
-    }
-    fprintf(f, "%d %d\n", w, k);
-    for(int i = 0; i<w; i++) {
-        for(int j = 0; j<k; j++) {
-            if(j>0) fprintf(f, " ");
-            fprintf(f, "%.2f", M[i][j]);
-        }
-        fprintf(f, "\n");
-    }
-    int blad = ferror(f);
-    if(fclose(f) != 0) blad = 1;
-    return blad ? 1 : 0;
-}
-
-int dzialanie(int op, double A[][MAX], int wA, int kA, double B[][MAX], int wB, int kB, double c[][MAX], int *wC, int *kC) {
+    sprawdz(dodaj(A, 2, 2, B, 2, 2, C, &wC, &kC) == OK, "Dodawanie poprawne wymiary");
+    sprawdz(C[0][0] == 6, "Wynik dodawania [0][0] poprawny");
     
+    sprawdz(dodaj(A, 2, 2, B, 1, 2, C, &wC, &kC) == BLAD_NIEZGODNE_WYMIARY, "Dodawanie zlych wymiarow prostokatnych");
+
+    if (liczba_bledow == 0) printf("Wszystkie testy zaliczone!\n");
+    return liczba_bledow > 0 ? 1 : 0;
 }
