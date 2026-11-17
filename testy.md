@@ -18,6 +18,9 @@ Macierz Q:
 Recznie policzony pierwszy element P x Q:
 C[0][0] = (1 * 7) + (2 * 9) + (3 * 11) = 7 + 18 + 33 = 58.00
 
+Recznie policzony pierwszy element A x B:
+C[0][0] = (1 * 5) + (2 * 7) = 5 + 14 = 19.00
+
 Suma (A + B):
     6.00    8.00
    10.00   12.00
