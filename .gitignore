@@ -1,0 +1,4 @@
+*.o
+*.exe
+wynik.txt
+dane/
